@@ -1,0 +1,3 @@
+it\com\dt\jira\plugin\MyComponentWiredTest.class
+ut\com\dt\jira\plugin\tab\DTProjectTabPanelTest.class
+ut\com\dt\jira\plugin\MyComponentUnitTest.class

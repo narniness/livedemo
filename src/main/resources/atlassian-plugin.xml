@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="custom-project-tab"/>
+  <!-- add our web resources -->
+  <web-resource key="custom-project-tab-resources" name="custom-project-tab Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <resource type="download" name="custom-project-tab.css" location="/css/custom-project-tab.css"/>
+    <resource type="download" name="custom-project-tab.js" location="/js/custom-project-tab.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>custom-project-tab</context>
+  </web-resource>
+  <!-- publish our component -->
+  <component key="myPluginComponent" class="com.dt.jira.plugin.MyPluginComponentImpl" public="true">
+    <interface>com.dt.jira.plugin.MyPluginComponent</interface>
+  </component>
+  <!-- import from the product container -->
+  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+   <!-- ao module -->
+   <ao key="ao-module"> 
+	  <description>The module configuring the Active Objects service used by this plugin</description> 
+	  <entity>com.dt.jira.plugin.ao.SubtaskConfig</entity>
+  </ao>
+   <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+		<description>Component to access Active Objects functionality from the plugin</description>
+	</component-import>
+	<component key="tx-processor" name="Transactional Annotation Processor"
+	class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+		<decription>Processes @Transactional annotations.</decription>
+	</component>
+  <component key="subtaskService" name="subtaskService" class="com.dt.jira.plugin.tab.SubTaskServiceImpl" public="true">
+		<interface>com.dt.jira.plugin.tab.SubTaskService</interface>
+	</component>
+	<!-- metadata context item -->
+	<template-context-item key="subtaskServiceContextItem"
+		component-ref="subtaskService" context-key="subtaskService" global="true"
+		name="JIRA Subtask Context Item" />
+		
+  <project-tabpanel key="dt-project-tab-panel" name="DT Custom Project Tab Panel" 
+		i18n-name-key="dt-project-tab-panel.name" class="com.dt.jira.plugin.tab.DTProjectTabPanel">
+			<description key="dt-project-tab-panel.description">The DT Project Tab Panel Plugin</description>
+			<label key="dt-project-tab-panel.label">Custom Tab</label>
+			<order>20</order>
+		<resource type="velocity" name="view" location="templates/tabpanels/dt-project-tab-panel.vm"/>	
+  </project-tabpanel>
+ 
+	<!--servlet name="Subtask Link" class="com.dt.jira.plugin.tab.SubtaskAction" key="subtask">
+		<description>A servlet to add and list subtask attributes</description>
+		<url-pattern>/subtask/link</url-pattern>
+	</servlet-->    
+	
+	<webwork1 key="subtasktab" i18n-name-key=" " name="subtasktab"
+            class="java.lang.Object">
+        <actions>
+          <description key="descriptionkeyhere">Action that populates </description>
+          <action name="com.dt.jira.plugin.tab.SubtaskAction" alias="SubtaskAction">
+            <view name="input">/templates/tabpanels/dt-project-tab-panel.vm</view>
+           <view name="success">/browse</view>
+            <view name="error">/templates/subtask-link.vm</view>
+          </action>
+        </actions>
+    </webwork1>
+	
+</atlassian-plugin>

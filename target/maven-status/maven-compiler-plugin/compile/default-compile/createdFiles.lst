@@ -1,0 +1,7 @@
+com\dt\jira\plugin\tab\DTProjectTabPanel.class
+com\dt\jira\plugin\ao\SubtaskConfig.class
+com\dt\jira\plugin\tab\SubTaskService.class
+com\dt\jira\plugin\tab\SubtaskAction.class
+com\dt\jira\plugin\MyPluginComponentImpl.class
+com\dt\jira\plugin\MyPluginComponent.class
+com\dt\jira\plugin\tab\SubTaskServiceImpl.class

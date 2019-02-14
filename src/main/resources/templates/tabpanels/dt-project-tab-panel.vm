@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title> Subtask  Configuration </title>		
+	
+		<style>
+			table,td,th { border:0px solid black; }
+			td { text-align:right; padding:5px; }
+		</style>
+		
+	</head>
+	<body>
+	#if ($hasAdminPermission)
+		#set( $access = "" )
+   #else
+      #set( $access = "disabled" )
+	#end  
+	<form id="customtabform" method="post" action="${req.contextPath}/plugins/secure/SubtaskAction!default.jspa?jiraProjectKey=$textutils.htmlEncode(${projectKey})">
+	<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td>Ability to enable/disable automatic creation of sub-tasks for </td>
+						<td style="text-align:left"> $!{projectName} </td>
+					</tr>
+					#foreach ($issueTypeKey in $subtaskmap.keySet())
+						<tr>
+							<td> 
+							   #if( $!subtaskmap.get($!issueTypeKey) == 'Sub-task' ||  $!subtaskmap.get($!issueTypeKey) == 'Bug' )
+								<input type=checkbox name='subtaskId$!issueTypeKey' id='subtaskId$!issueTypeKey'  value='true' onClick="javascript:searchFunction('$!issueTypeKey')" disabled/>
+								<input type="hidden" name="$!issueTypeKey" id="$!issueTypeKey" value="true"/>
+								#else
+								<input type=checkbox name='subtaskId$!issueTypeKey' id='subtaskId$!issueTypeKey'  value='true' onClick="javascript:searchFunction('$!issueTypeKey')" checked $!access />
+								<input type="hidden" name="$!issueTypeKey" id="$!issueTypeKey" value="true"/>
+							  #end
+							</td>
+							<td style="text-align:left"> $!subtaskmap.get($!issueTypeKey) </td>				
+						</tr>
+					#end
+	  </table>	
+		#if ($hasAdminPermission)
+				<input type=submit  name='Save' value='Save' />
+		#end  
+	</form>
+	#if( $!req.getSession().getAttribute("fromTab") == 'false' )
+		<script>JIRA.Messages.showSuccessMsg('Subtask Configuration Saved');</script>
+
+		$req.getSession().setAttribute("fromTab","true")	
+	#end
+	 <script language="JavaScript" type="text/javascript">   
+        function searchFunction (taskid) {
+			var selected = document.getElementById(taskid).value;
+			document.getElementById(taskid).value = document.getElementById('subtaskId'+taskid).checked;			
+        }
+		
+		AJS.$( document ).ready(function() {
+		    #foreach ($subTask in $subtskconfig)
+			    var subTskId =  $subTask.getSubTaskId();		 
+						//alert('Hi '+ subTskId);
+						//alert('Hi 33'+ document.getElementById('subtaskId'+subTskId).checked);
+						document.getElementById('subtaskId'+subTskId).checked = false;
+						document.getElementById(subTskId).value="false";
+						//document.getElementById(subTskId).value = document.getElementById('subtaskId'+subTskId).checked;
+			    #end
+		});
+    </script>
+	</body>
+</html>
